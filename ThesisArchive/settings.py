@@ -173,8 +173,8 @@ OPENAI_API_KEY = 'sk-proj-dIhBxfLBAKL4DxsniSRhT3BlbkFJpuRuYgcq5jwjFTqfE6EE'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'jrfrancisco1493ant@student.fatima.edu.ph'
-EMAIL_HOST_PASSWORD = 'urbzwazjjaszviqu'
+EMAIL_HOST_USER = 'cabalacc5001@gmail.com'
+EMAIL_HOST_PASSWORD = 'bvdvauhorzvkxxom'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_USE_SSL = False

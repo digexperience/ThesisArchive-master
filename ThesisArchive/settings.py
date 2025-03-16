@@ -26,8 +26,7 @@ SECRET_KEY = 'django-insecure-u8dvwnfb0l$f7z%0dvz#wv3&pe6i_wue3eza1d@=3vdy!_j8(_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['thesisarhivesysolfu.ellequin.com', '127.0.0.1']
-
+ALLOWED_HOSTS = ['thesisarchive-master.onrender.com', '0.0.0.0', '127.0.0.1']
 
 # Application definition
 

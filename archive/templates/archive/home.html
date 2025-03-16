@@ -1,0 +1,143 @@
+{% extends 'archive/base.html' %}
+{% load static %}
+
+{% block title %}Welcome to Our Lady of Fatima University{% endblock %}
+
+{% block content %}
+<style>
+    .hero {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 1)), url("{% static 'assets/img/olfu_bg.jpg' %}") center/cover no-repeat;
+        color: white;
+        padding: 80px 20px;
+        text-align: center;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .core-values {
+        background-color: #f8f9fa;
+        padding: 50px 20px;
+    }
+    .value-card {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        height: 100%;
+        transition: transform 0.3s;
+    }
+    .value-card:hover {
+        transform: scale(1.05);
+    }
+    .vision-mission {
+        padding: 50px 20px;
+    }
+    .row {
+    display: flex;
+    flex-wrap: wrap;
+    }
+
+</style>
+
+<!-- Hero Section -->
+<div class="hero">
+    <h1 class="fw-bold">Our Lady of Fatima University</h1>
+    <p class="lead">A Premier Inclusive University of Choice</p>
+</div>
+
+
+<!-- Vision & Mission Section -->
+<div class="vision-mission container text-center">
+    <div class="row">
+        <div class="col-md-6">
+            <h2 class="text-primary fw-bold">Vision</h2>
+            <p>
+                A premier inclusive university of choice aspiring to improve man as man by developing individuals 
+                through a legacy of excellent education and compassionate value formation.
+            </p>
+        </div>
+        <div class="col-md-6">
+            <h2 class="text-success fw-bold">Mission</h2>
+            <p>
+                The Our Lady of Fatima University, together with Fatima Medical Science Foundation, Inc., is dedicated to 
+                the improvement of man as man through the holistic formation of individuals imbued with knowledge, skills, and virtues.
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- Core Values Section -->
+<div class="core-values text-center">
+    <h2 class="fw-bold text-danger">Core Values & Graduate Attributes</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3 mb-4">
+                <div class="card value-card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary"><b>A</b></h5>
+                        <p class="card-text">Aspires to do his Best</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card value-card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-success"><b>C</b></h5>
+                        <p class="card-text">Credible and Compassionate</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card value-card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-warning"><b>H</b></h5>
+                        <p class="card-text">Hardworking and Honorable</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card value-card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-danger"><b>I</b></h5>
+                        <p class="card-text">Inspiration to Others</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card value-card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-info"><b>E</b></h5>
+                        <p class="card-text">Efficient, Effective, and Ethical</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card value-card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-secondary"><b>V</b></h5>
+                        <p class="card-text">Visionary</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card value-card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-dark"><b>E</b></h5>
+                        <p class="card-text">Entrepreneurial, Employable, and Excellent Work Habits</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 mb-4">
+                <div class="card value-card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary"><b>R</b></h5>
+                        <p class="card-text">Responsible</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

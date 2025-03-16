@@ -1,0 +1,53 @@
+{% extends 'archive/admin_archive/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+Thesis Archive System - Pending Thesis
+
+{% endblock %} 
+
+{% block content %} 
+
+<div class="row mb-5">
+    {% for i in thesis %}
+    <div class="col-md-6 col-lg-4">
+        <div class="card text-center mb-3">
+            <div class="card-body">
+            {% if i.thesis_cover %}
+                <img src="{{i.thesis_cover.url}}" width="400" height="600" class="card-img-top" alt="{{i.title}}" style="margin-bottom: 1rem;">
+            {% endif %}
+            <h4 class="card-title">{{i.title | title}}</h4>
+            <h5 class="card-title">Published on <b><u>{{i.formatted_date_finished}}</u></b></h5>
+            <h5><b><u>Main Contributors</u></b></h5>
+            <p class="card-text">
+                {{i.author|title}}, {{i.author1|title}}</p>
+            <h5><b><u>Other Contributors</u></b></h5>
+            <p class="card-text">
+                {{i.author2|title}}, {{i.author3|title}}, {{i.author4|title}}</p>
+            <h5><b><u>Abstract</u></b></h5>
+            <p class="card-text">{{i.abstract|capfirst|truncatewords:15|slice:"-4"}}...</p>
+            <h5><b><u>Categories</u></b></h5>
+            <p class="card-text">{{i.category|title}}</p>
+            <h5><b><u>Certificates</u></b></h5>
+            {% if i.ethical_review %}
+                <a href="{{ i.ethical_review.url }}" target="_blank" class="btn">View Ethical Review</a>
+            {% endif %}
+
+            {% if i.statistician_certificate %}
+                <a href="{{ i.statistician_certificate.url }}" target="_blank" class="btn">View Statistician Certificate</a>
+            {% endif %}
+            {% if i.grammarian_certificate %}
+                <a href="{{ i.grammarian_certificate.url }}" target="_blank" class="btn">View Grammarian Certificate</a>
+            {% endif %}
+            {% if i.file_thesis %}            
+            <a href="{{i.file_thesis.url}}" target="_blank" class="btn btn-primary">Check the Full Capstone</a>
+            {% endif %}
+            <a href="{% url 'approved_uploads' i.id %}" class="btn btn-secondary">Approve</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}

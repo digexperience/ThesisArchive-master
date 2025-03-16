@@ -1,0 +1,5 @@
+008 sneat-1.0.0
+ThesisArchive/__pycache__/*
+archive/__pycache__/*
+archive/migrations
+.env

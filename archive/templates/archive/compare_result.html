@@ -1,0 +1,59 @@
+{% extends 'archive/base.html' %}
+{% load static %}
+
+{% block title %} 
+Thesis Archive System - Comparison Results
+{% endblock %} 
+
+{% block content %} 
+
+<div class="container">
+    <h2 class="mb-4">Comparison Results</h2>
+    
+    <div class="row">
+        <div class="col-md-6">
+            <h3>{{ thesis1.title }}</h3>
+            <p><strong>Authors:</strong> {{ thesis1.author }}, {{ thesis1.author1 }}</p>
+            <p><strong>Abstract:</strong> {{ thesis1.abstract | truncatewords:50 }}...</p>
+            {% if thesis1.file_thesis %}
+                <p><strong>File:</strong> <a href="{{ thesis1.file_thesis.url }}" target="_blank" class="btn btn-primary">Check the Full Capstone</a></p>
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h3>{{ thesis2.title }}</h3>
+            <p><strong>Authors:</strong> {{ thesis2.author }}, {{ thesis2.author1 }}</p>
+            <p><strong>Abstract:</strong> {{ thesis2.abstract | truncatewords:50 }}...</p>
+            {% if thesis1.file_thesis %}
+                <p><strong>File:</strong> <a href="{{ thesis2.file_thesis.url }}" target="_blank" class="btn btn-primary">Check the Full Capstone</a></p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="mt-4 p-3 border rounded bg-light">
+        <h3>Comparison Result</h3>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Chapter</th>
+                    <th>{{ thesis1.title }}</th>
+                    <th>{{ thesis2.title }}</th>
+                    <th>Comparison</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chapter, data in comparison_results.items %}
+                    <tr>
+                        <td>{{ chapter }}</td>
+                        <td>{{ data.thesis1_summary }}...</td>
+                        <td>{{ data.thesis2_summary }}...</td>
+                        <td>{{ data.ai_comparison }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <a href="{% url 'compare' %}" class="btn btn-primary mt-3">Compare Another</a>
+</div>
+
+{% endblock %}

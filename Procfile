@@ -1,0 +1,1 @@
+web: gunicorn ThesisArchive.wsgi --log-file -

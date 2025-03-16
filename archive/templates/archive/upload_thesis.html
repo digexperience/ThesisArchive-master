@@ -1,0 +1,136 @@
+{% extends 'archive/base.html' %} 
+{% load static %}
+
+{% block title %} 
+
+Thesis Archive System - Upload
+
+{% endblock %} 
+
+{% block content %} 
+
+<div class="col-md-12">
+    <div class="card mb-4">
+      <h5 class="card-header">Upload Thesis</h5>
+      <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="exampleFormControlInput1" class="form-label">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            id="exampleFormControlInput1"
+            placeholder="Title"
+            name="title"
+            required
+          />
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Main Contributors</label>
+            <input
+              type="text"
+              class="form-control"
+              placeholder="Authors Name"
+              name="author"
+              style="margin-bottom: 5px;"
+              required
+            />
+            <input
+            type="text"
+            class="form-control"
+            placeholder="Authors Name"
+            name="author1"
+            style="margin-bottom: 5px;"
+            required
+             />
+            <label class="form-label">Other Contributors</label>
+            <input
+            type="text"
+            class="form-control"
+            placeholder="Authors Name"
+            name="author2"
+            style="margin-bottom: 5px;"
+            />
+            <input
+            type="text"
+            class="form-control"
+            placeholder="Authors Name"
+            name="author3"
+            style="margin-bottom: 5px;"
+            />
+            <input
+            type="text"
+            class="form-control"
+            placeholder="Authors Name"
+            name="author4"
+            style="margin-bottom: 5px;"
+            />
+        </div>
+        <div class="mb-3">
+          <label for="categoryInput" class="form-label">Category</label>
+          <input
+            type="text"
+            class="form-control"
+            id="categoryInput"
+            placeholder="Category"
+            name="category"
+            list="categoryList"
+            required
+          />
+          <datalist id="categoryList">
+            {% for cat in categories %}
+              <option value="{{ cat }}"></option>
+            {% endfor %}
+          </datalist>
+        </div>        
+        <div class="mb-3 row">
+          <label for="html5-month-input" class="col-md-2 col-form-label">Month And Year Published</label>
+          <div class="col-md-10">
+            <input class="form-control" type="month" value="2024-04" id="html5-month-input" name="date_finished" />
+          </div>
+        </div>
+        <div>
+          <label for="exampleFormControlTextarea1" class="form-label">Abstract</label>
+          <textarea class="form-control" name="abstract" id="exampleFormControlTextarea1" rows="3" required></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="formFile" class="form-label">Upload Capstone PDF</label>
+          <input class="form-control" accept=".pdf" type="file" id="formFile" name="file_thesis" />
+          <p>Accept's only PDF</p>
+        </div>
+        <div class="mb-3">
+          <label for="formFile" class="form-label">Upload Capstone Cover</label>
+          <input class="form-control" accept=".jpg,.jpeg,.png" type="file" id="formFile" name="thesis_cover" />
+          <p>Accept's  only JPG\JPEG\PNG</p>
+        </div>
+        <div class="mb-3">
+          <label for="formFileEthical" class="form-label">Upload Ethical Review Certificate</label>
+          <input class="form-control" accept=".pdf" type="file" id="formFileEthical" name="ethical_review" required />
+          <p>Accepts only PDF</p>
+        </div>
+        
+        <div class="mb-3">
+          <label for="formFileStatistician" class="form-label">Upload Statistician Certificate</label>
+          <input class="form-control" accept=".pdf" type="file" id="formFileStatistician" name="statistician_certificate" required />
+          <p>Accepts only PDF</p>
+        </div>
+        
+        <div class="mb-3">
+          <label for="formFileGrammarian" class="form-label">Upload Grammarian Certificate</label>
+          <input class="form-control" accept=".pdf" type="file" id="formFileGrammarian" name="grammarian_certificate" required />
+          <p>Accepts only PDF</p>
+        </div>        
+        <div class="mb-3">
+          <div class="col-sm-6">
+            <button type="submit" class="btn btn-primary">Upload</button>
+            <button type="reset" class="btn btn-warning">Reset</button>
+          </div>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+
+{% endblock %}

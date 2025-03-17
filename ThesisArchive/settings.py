@@ -181,8 +181,14 @@ EMAIL_USE_SSL = False
 
 # tsbcflwyzcvswpko
 
-DEFAULT_FROM_EMAIL = 'noreply<no_reply@domain.com>'
+DEFAULT_FROM_EMAIL = 'ThesisArchive<no_reply@domain.com>'
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://olfuthesisarchivingsystem.com',
+    'https://www.olfuthesisarchivingsystem.com'
+]
 
-CSRF_TRUSTED_ORIGINS = ['https://thesisarhivesysolfu.ellequin.com']
-CORS_ORIGIN_WHITELIST = ['https://thesisarhivesysolfu.ellequin.com']
+CORS_ORIGIN_WHITELIST = [
+    'https://olfuthesisarchivingsystem.com',
+    'https://www.olfuthesisarchivingsystem.com'
+]

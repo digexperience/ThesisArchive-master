@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-u8dvwnfb0l$f7z%0dvz#wv3&pe6i_wue3eza1d@=3vdy!_j8(_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['olfuthesisarchivingsystem.com', '127.0.0.1']
 

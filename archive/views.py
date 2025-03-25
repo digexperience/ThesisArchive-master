@@ -49,7 +49,7 @@ import os
 from openai import OpenAI
 
 client = OpenAI(
-  api_key='sk-proj-dIhBxfLBAKL4DxsniSRhT3BlbkFJpuRuYgcq5jwjFTqfE6EE'
+  api_key='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'
 )
 
 @login_required(login_url='login')
@@ -107,11 +107,9 @@ def ThesisUploadPage(request):
 def MyUploads(request):
     thesis = ThesisUpload.objects.filter(user=request.user)
     categories = ThesisUpload.objects.values("category").distinct()
-    print(categories)
     if request.method == 'POST':
         search = request.POST.get('search')
         category = request.POST.get('category')
-        print(search, category)
         if search and category:
             thesis = ThesisUpload.objects.filter(Q(title__icontains=search) |
             Q(abstract__icontains=search) | 
@@ -215,7 +213,7 @@ def generate_ai_comparison(text1, text2, chapter):
     text2 = text2[:max_length]
 
     response = client.chat.completions.create(
-        model="gpt-4",
+        model="gpt-3.5-turbo-0125",
         messages=[
             {"role": "system", "content": "You are an AI that compares research chapters."},
             {"role": "user", "content": f"Compare the key points and topics of {chapter} in these two capstone project papers:\n\nDocument 1:\n{text1}\n\nDocument 2:\n{text2}\n\nProvide a concise comparison."}
@@ -223,7 +221,6 @@ def generate_ai_comparison(text1, text2, chapter):
         max_tokens=500
     )
     return response.choices[0].message.content.strip()
-
 
 def CompareResearch(request):
     if request.method == "POST":
@@ -239,8 +236,12 @@ def CompareResearch(request):
             messages.error(request, "One or both files are missing.")
             return redirect("compare")
 
-        thesis1_path = download_file(thesis1.file_thesis.url)
-        thesis2_path = download_file(thesis2.file_thesis.url)
+        # Convert relative URL to absolute URL
+        thesis1_url = request.build_absolute_uri(thesis1.file_thesis.url)
+        thesis2_url = request.build_absolute_uri(thesis2.file_thesis.url)
+
+        thesis1_path = download_file(thesis1_url)
+        thesis2_path = download_file(thesis2_url)
 
         if not thesis1_path or not thesis2_path:
             messages.error(request, "Error downloading files.")
@@ -279,7 +280,6 @@ def CompareResearch(request):
     context = {'thesis': thesis, 'category': categories}
     return render(request, "archive/compare.html", context)
 
-@login_required(login_url='login')
 def TitleGenerator(request):
     titles_list = []
     category = ""

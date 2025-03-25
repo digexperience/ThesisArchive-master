@@ -1,0 +1,65 @@
+nohup: ignoring input
+[2025-03-20 10:11:07 +0000] [97465] [INFO] Starting gunicorn 23.0.0
+[2025-03-20 10:11:07 +0000] [97465] [INFO] Listening at: http://0.0.0.0:8000 (97465)
+[2025-03-20 10:11:07 +0000] [97465] [INFO] Using worker: sync
+[2025-03-20 10:11:07 +0000] [97466] [INFO] Booting worker with pid: 97466
+[2025-03-20 10:11:07 +0000] [97467] [INFO] Booting worker with pid: 97467
+[2025-03-20 10:11:07 +0000] [97468] [INFO] Booting worker with pid: 97468
+[2025-03-20 12:58:29 +0000] [97465] [INFO] Handling signal: hup
+[2025-03-20 12:58:29 +0000] [97465] [INFO] Hang up: Master
+[2025-03-20 12:58:29 +0000] [97465] [ERROR] Worker (pid:97467) was sent SIGHUP!
+[2025-03-20 12:58:29 +0000] [97465] [ERROR] Worker (pid:97468) was sent SIGHUP!
+[2025-03-20 12:58:29 +0000] [97465] [ERROR] Worker (pid:97466) was sent SIGHUP!
+[2025-03-20 12:58:29 +0000] [100445] [INFO] Booting worker with pid: 100445
+[2025-03-20 12:58:29 +0000] [100447] [INFO] Booting worker with pid: 100447
+[2025-03-20 12:58:29 +0000] [100446] [INFO] Booting worker with pid: 100446
+[2025-03-22 01:20:22 +0000] [100445] [INFO] Worker exiting (pid: 100445)
+[2025-03-22 01:20:22 +0000] [100447] [INFO] Worker exiting (pid: 100447)
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+ Management System, Coupon
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+ Sample
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+[2025-03-22 01:20:22 +0000] [100446] [INFO] Worker exiting (pid: 100446)
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+Form Data: <QueryDict: {'csrfmiddlewaretoken': ['s7OiwhVGllHVDIcsVrsTj52MOyuMvyPRxQBZ8uicbopnABNA34zIukbw5mlKnVPE'], 'username': ['Jommel1100'], 'email': ['jsrepaso1410ant@student.fatima.edu.ph'], 'password1': ['Repaso71423'], 'password2': ['Repaso71423']}>
+Form Errors: 
+send email
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+<QuerySet [{'category': 'Sample'}, {'category': 'Management System, Coupon'}]>
+[2025-03-22 01:20:22 +0000] [97465] [INFO] Handling signal: term
+[2025-03-22 01:20:23 +0000] [97465] [ERROR] Worker (pid:100446) was sent SIGTERM!
+[2025-03-22 01:20:23 +0000] [97465] [ERROR] Worker (pid:100447) was sent SIGTERM!
+[2025-03-22 01:20:23 +0000] [97465] [ERROR] Worker (pid:100445) was sent SIGTERM!
+[2025-03-22 01:20:23 +0000] [97465] [INFO] Shutting down: Master

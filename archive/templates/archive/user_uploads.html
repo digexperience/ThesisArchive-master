@@ -15,7 +15,7 @@ Thesis Archive System - User Uploads
         <div class="card text-center mb-3">
             <div class="card-body">
             {% if i.thesis_cover %}
-                <img src="{{i.thesis_cover.url}}" class="card-img-top" alt="{{i.title}}" style="margin-bottom: 1rem;">
+                <img src="{{i.thesis_cover.url}}" width="400" height="600" class="card-img-top" alt="{{i.title}}" style="margin-bottom: 1rem;">
             {% endif %}
             <h5 class="card-title">{{i.title | title}}</h5>
             <h6 class="card-title">Publish on {{i.date_pretty}}</h6>

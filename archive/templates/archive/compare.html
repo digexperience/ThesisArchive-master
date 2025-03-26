@@ -5,18 +5,24 @@
 Thesis Archive System - Compare
 {% endblock %} 
 
-{% block content %} 
-
+{% block content %}
+<style>
+    .thesis-checkbox + label {
+    cursor: pointer;
+    }
+</style>
 <form method="POST" action="{% url 'compare' %}">
     {% csrf_token %}
     <div class="row mb-5">
-        <button type="submit" class="btn btn-success">Compare Selected</button>
+        <div class="col-md-12 col-lg-12">
+            <button type="submit" class="btn btn-success mb-2" style="width: 100%;">Compare Selected</button>
+        </div>
         {% for i in thesis %}
         <div class="col-md-6 col-lg-4">
             <div class="card text-center mb-3">
                 <div class="card-body">
                     {% if i.thesis_cover %}
-                        <img src="{{ i.thesis_cover.url }}" class="card-img-top" alt="{{ i.title }}" style="margin-bottom: 1rem;">
+                        <img src="{{ i.thesis_cover.url }}" width="400" height="600" class="card-img-top" alt="{{ i.title }}" style="margin-bottom: 1rem;">
                     {% endif %}
                     <h5 class="card-title">{{ i.title | title }}</h5>
                     <h6 class="card-title">Published on {{ i.date_pretty }}</h6>
@@ -26,8 +32,8 @@ Thesis Archive System - Compare
                     <p class="card-text">{{ i.author2 | title }}, {{ i.author3 | title }}, {{ i.author4 | title }}</p>
                     <p class="card-text">{{ i.abstract | capfirst | truncatewords:15 | slice:"-4" }}...</p>
                     
-                    <input type="checkbox" name="thesis_ids" value="{{ i.id }}" class="thesis-checkbox">
-                    <label>Select for Comparison</label>
+                    <input type="checkbox" name="thesis_ids" value="{{ i.id }}" class="thesis-checkbox" id="thesis-{{ i.id }}">
+                    <label for="thesis-{{ i.id }}">Select for Comparison</label>
                 </div>
             </div>
         </div>

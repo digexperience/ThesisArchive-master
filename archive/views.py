@@ -42,6 +42,7 @@ from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from django.utils.timezone import now
 from django.db.models.functions import ExtractYear
+from django.db.models.functions import Substr
 
 load_dotenv()
 
@@ -56,24 +57,39 @@ client = OpenAI(
 def Home(request):
     if request.user.is_superuser:
         return redirect('admin_page')
-    return render(request, "archive/home.html")
+    years = (
+        ThesisUpload.objects.filter(status="Approved")
+        .exclude(date_finished=None)
+        .annotate(year=Substr('date_finished', 1, 4))
+        .values_list("year", flat=True)
+        .distinct()
+        .order_by("-year")
+    )
+
+    return render(request, "archive/home.html", {"years": years})
 
 @login_required(login_url='login')
-def approved_thesis_list(request):
-    five_years_ago = now() - timedelta(days=5 * 365)
-
-    # Initial QuerySet: Only approved theses within the last 5 years
-    thesis = ThesisUpload.objects.filter(status='Approved', date__gte=five_years_ago)
+def approved_thesis_list(request, year=None):
+    thesis = ThesisUpload.objects.filter(status='Approved')
 
     # Get distinct categories and years for filtering
     categories = ThesisUpload.objects.values("category").distinct()
-    years = ThesisUpload.objects.annotate(year=ExtractYear('date')).values("year").distinct().order_by("year")
+    years = (
+        ThesisUpload.objects.filter(status="Approved")
+        .exclude(date_finished=None)
+        .annotate(year=Substr('date_finished', 1, 4))
+        .values_list("year", flat=True)
+        .distinct()
+        .order_by("-year")
+    )
+
+    if year:
+        thesis = thesis.filter(date__year=year)
 
     if request.method == 'POST':
         search = request.POST.get('search', '').strip()
         category = request.POST.get('category', '').strip()
 
-        # Apply filters based on user input
         if search:
             thesis = thesis.filter(
                 Q(title__icontains=search) |
@@ -85,6 +101,43 @@ def approved_thesis_list(request):
 
     context = {'thesis': thesis, 'category': categories, 'years': years}
     return render(request, 'archive/thesis_archive.html', context)
+    
+@login_required(login_url='login')
+def approved_thesis_list_by_year(request, year):
+    
+    thesis = ThesisUpload.objects.annotate(
+        year=Substr('date_finished', 1, 4)
+    ).filter(
+        status='Approved',
+        year=year
+    )
+
+    categories = ThesisUpload.objects.values("category").distinct()
+    years = (
+        ThesisUpload.objects.filter(status="Approved")
+        .exclude(date_finished=None)
+        .annotate(year=Substr('date_finished', 1, 4))
+        .values_list("year", flat=True)
+        .distinct()
+        .order_by("-year")
+    )
+
+    if request.method == 'POST':
+        search = request.POST.get('search', '').strip()
+        category = request.POST.get('category', '').strip()
+
+        if search:
+            thesis = thesis.filter(
+                Q(title__icontains=search) |
+                Q(abstract__icontains=search) |
+                Q(date_finished__icontains=search)
+            )
+        if category:
+            thesis = thesis.filter(category=category)
+
+    context = {'thesis': thesis, 'category': categories, 'years': years, 'selected_year': year}
+    return render(request, 'archive/thesis_archive.html', context)
+
 
 @login_required(login_url='login')
 def ThesisUploadPage(request):

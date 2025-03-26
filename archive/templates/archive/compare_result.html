@@ -16,7 +16,7 @@ Thesis Archive System - Comparison Results
             <p><strong>Authors:</strong> {{ thesis1.author }}, {{ thesis1.author1 }}</p>
             <p><strong>Abstract:</strong> {{ thesis1.abstract | truncatewords:50 }}...</p>
             {% if thesis1.file_thesis %}
-                <p><strong>File:</strong> <a href="{{ thesis1.file_thesis.url }}" target="_blank" class="btn btn-primary">Check the Full Capstone</a></p>
+                <p><strong>File:</strong> <a href="{{ thesis1.file_thesis.url }}" target="_blank" class="btn btn-primary"><i class="bx bx-file"></i> Check the Full Capstone</a></p>
             {% endif %}
         </div>
         <div class="col-md-6">
@@ -24,7 +24,7 @@ Thesis Archive System - Comparison Results
             <p><strong>Authors:</strong> {{ thesis2.author }}, {{ thesis2.author1 }}</p>
             <p><strong>Abstract:</strong> {{ thesis2.abstract | truncatewords:50 }}...</p>
             {% if thesis1.file_thesis %}
-                <p><strong>File:</strong> <a href="{{ thesis2.file_thesis.url }}" target="_blank" class="btn btn-primary">Check the Full Capstone</a></p>
+                <p><strong>File:</strong> <a href="{{ thesis2.file_thesis.url }}" target="_blank" class="btn btn-primary"><i class="bx bx-file"></i> Check the Full Capstone</a></p>
             {% endif %}
         </div>
     </div>

@@ -73,6 +73,24 @@
     <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
     <script src="{% static '/assets/js/config.js' %}"></script>
   </head>
+  <style>
+    
+    .card {
+        max-width: 40vw;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 968px) {
+      max-width: 50vw;
+    }
+
+    @media (max-width: 768px) {
+        .card {
+            max-width: unset;
+            width: 90%;
+        }
+    }
+  </style>
 
   <body>
     <!-- Content -->

@@ -11,6 +11,7 @@ urlpatterns = [
     path("compare/", views.CompareResearch, name="compare"),
     path("title-generator/", views.TitleGenerator, name="title-generator"),
     path('approved-thesis/', views.approved_thesis_list, name='approved_thesis_list'),
+    path('approved-thesis/<int:year>/', views.approved_thesis_list_by_year, name='approved_thesis_list_by_year'),
     
     # Admin
     path("admin_page/", views.AdminPage, name="admin_page"),

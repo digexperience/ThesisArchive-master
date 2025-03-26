@@ -91,7 +91,7 @@
         <div class="app-brand demo">
             <a href="" class="app-brand-link" style="margin-top: 2rem; margin-bottom: 1rem;">
               <span class="app-brand-logo demo">
-                <img src="{% static '/assets/img/logo.png' %}" width="50" alt="">
+                <img src="{% static '/assets/img/logo.png' %}" width="50" style="margin: auto;" alt="">
                 <p>Thesis Archive System</p>
                 <!-- <svg
                   width="25"
@@ -160,37 +160,59 @@
 
           <ul class="menu-inner py-1">
             <!-- Dashboard -->
-            <li class="menu-item">
+            <li class="menu-item {% if request.path == '/' %}active{% endif %}">
               <a href="{% url 'home' %}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-home-circle"></i>
                 <div data-i18n="Analytics">Dashboard</div>
               </a>
             </li>
-            <li class="menu-item">
-              <a href="{% url 'approved_thesis_list' %}" class="menu-link">
-                  <i class="menu-icon tf-icons bx bx-file"></i>
-                  <div data-i18n="Analytics">Capstone Documents</div>
-              </a>
-            </li>
-            <li class="menu-item">
+            <li class="menu-item {% if '/approved-thesis/' in request.path %}active{% endif %}" id="capstone-menu">
+              {% if years|length > 0 %}
+                  <a href="#" class="menu-link">
+                      <i class="menu-icon tf-icons bx bx-folder"></i>
+                      <div data-i18n="Analytics">Capstone Documents</div>
+                  </a>
+                  <ul class="submenu" id="year-dropdown" style="{% if '/approved-thesis/' in request.path %}display: block;{% else %}display: none;{% endif %}">
+                      <li class="menu-item {% if request.path == '/approved-thesis/' %}active{% endif %}">
+                          <a href="{% url 'approved_thesis_list' %}" class="menu-link">All Documents</a>
+                      </li>
+                      {% for year in years %}
+                          {% if year and year != 0 %}
+                              <li class="menu-item {% if '/approved-thesis/' in request.path and request.path|slice:"-5:-1" == year|stringformat:"s" %}active{% endif %}">
+                                  <a href="{% url 'approved_thesis_list_by_year' year %}" class="menu-link">{{ year }}</a>
+                              </li>
+                          {% endif %}
+                      {% endfor %}
+                  </ul>
+              {% else %}
+                  <a href="{% url 'approved_thesis_list' %}" class="menu-link">
+                      <i class="menu-icon tf-icons bx bx-file"></i>
+                      <div data-i18n="Analytics">Capstone Documents</div>
+                  </a>
+              {% endif %}
+          </li>
+          
+              </li>     
+
+            <li class="menu-item {% if request.path == '/compare/' %}active{% endif %}">
               <a href="{% url 'compare' %}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-book-content"></i>
                 <div data-i18n="Analytics">Compare Research</div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {% if request.path == '/myuploads/' %}active{% endif %}">
               <a href="{% url 'myuploads' %}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-folder"></i>
                 <div data-i18n="Analytics">My Uploads</div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {% if request.path == '/thesis_upload/' %}active{% endif %}">
               <a href="{% url 'thesis_upload' %}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-file-blank"></i>
                 <div data-i18n="Analytics">Upload</div>
               </a>
             </li>
-            <li class="menu-item">
+            <li class="menu-item {% if request.path == '/title-generator/' %}active{% endif %}">
               <a href="{% url 'title-generator' %}" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-chalkboard"></i>
                 <div data-i18n="Analytics">Title Generator</div>
@@ -256,40 +278,34 @@
   
                 <!-- User -->
                 <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                    <div class="avatar avatar-online">
-                      {% if  request.user.profile.image %}
-                        <img
-                          src="{{ request.user.profile.image.url }}"
-                          alt class="w-px-40 h-auto rounded-circle"
-                        />
-                      {% else %}
-                        <img
-                        src="https://api.dicebear.com/7.x/pixel-art/svg?seed={{request.user}}&hair=short01,short02,short03,short04,short05"
-                        alt class="w-px-40 h-auto rounded-circle"
-                        />
-                      {% endif %}
-                      <!-- <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" /> -->
-                    </div>
+                  <a class="nav-link dropdown-toggle hide-arrow d-flex align-items-center" href="javascript:void(0);" data-bs-toggle="dropdown">
+                      <div class="avatar avatar-online me-2">
+                          {% if request.user.profile.image %}
+                              <img src="{{ request.user.profile.image.url }}" alt class="w-px-40 h-auto rounded-circle" />
+                          {% else %}
+                              <img src="https://api.dicebear.com/7.x/pixel-art/svg?seed={{request.user}}&hair=short01,short02,short03,short04,short05"
+                                   alt class="w-px-40 h-auto rounded-circle" />
+                          {% endif %}
+                      </div>
+                      <i class="bx bx-chevron-down"></i>
                   </a>
                   <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                      <a class="dropdown-item" href="{% url 'profile' %}">
-                        <i class="bx bx-user me-2"></i>
-                        <span class="align-middle">My Profile</span>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="{%  url 'logout' %}">
-                        <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Log Out</span>
-                      </a>
-                    </li>
+                      <li>
+                          <a class="dropdown-item" href="{% url 'profile' %}">
+                              <i class="bx bx-user me-2"></i>
+                              <span class="align-middle">My Profile</span>
+                          </a>
+                      </li>
+                      <li><div class="dropdown-divider"></div></li>
+                      <li>
+                          <a class="dropdown-item" href="{% url 'logout' %}">
+                              <i class="bx bx-power-off me-2"></i>
+                              <span class="align-middle">Log Out</span>
+                          </a>
+                      </li>
                   </ul>
-                </li>
+              </li>
+              
                 <!--/ User -->
               </ul>
             </div>
@@ -333,5 +349,21 @@
 
     <!-- Page JS -->
     <script src="{% static '/assets/js/dashboards-analytics.js' %}"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+    let capstoneMenu = document.getElementById("capstone-menu");
+    let dropdown = document.getElementById("year-dropdown");
+
+    if (dropdown) {
+        capstoneMenu.addEventListener("click", function(event) {
+            if (!event.target.closest(".submenu a")) { 
+                event.preventDefault();
+                dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+            }
+        });
+    }
+});
+
+      </script>
   </body>
 </html>

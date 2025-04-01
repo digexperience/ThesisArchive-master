@@ -87,9 +87,17 @@ Thesis Archive System - Upload
         <div class="mb-3 row">
           <label for="html5-month-input" class="col-md-2 col-form-label">Month And Year Published</label>
           <div class="col-md-10">
-            <input class="form-control" type="month" value="2024-04" id="html5-month-input" name="date_finished" />
+            <input class="form-control" type="month" id="html5-month-input" name="date_finished" />
           </div>
         </div>
+        
+        <script>
+          document.addEventListener("DOMContentLoaded", function() {
+            const currentDate = new Date();
+            const formattedDate = currentDate.getFullYear() + '-' + String(currentDate.getMonth() + 1).padStart(2, '0');
+            document.getElementById("html5-month-input").value = formattedDate;
+          });
+        </script>        
         <div>
           <label for="exampleFormControlTextarea1" class="form-label">Abstract</label>
           <textarea class="form-control" name="abstract" id="exampleFormControlTextarea1" rows="3" required></textarea>

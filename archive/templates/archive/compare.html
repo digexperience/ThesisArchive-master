@@ -25,7 +25,7 @@ Thesis Archive System - Compare
                         <img src="{{ i.thesis_cover.url }}" width="400" height="600" class="card-img-top" alt="{{ i.title }}" style="margin-bottom: 1rem;">
                     {% endif %}
                     <h5 class="card-title">{{ i.title | title }}</h5>
-                    <h6 class="card-title">Published on {{ i.date_pretty }}</h6>
+                    <h6 class="card-title">Published on {{ i.date_finished }}</h6>
                     <h6>Main Contributors</h6>
                     <p class="card-text">{{ i.author | title }}, {{ i.author1 | title }}</p>
                     <h6>Other Contributors</h6>

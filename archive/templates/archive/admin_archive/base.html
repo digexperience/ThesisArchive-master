@@ -172,6 +172,11 @@
                 <div data-i18n="Analytics">Pending Thesis</div>
               </a>
             </li>
+            <li class="menu-item">
+              <a href="{% url 'backup_page' %}" class="menu-link">
+                <i class="menu-icon tf-icons bx bx-save"></i> Manage Backups
+              </a>
+            </li>
           </ul>
         </aside>
         <!-- / Menu -->
@@ -181,87 +186,130 @@
           <!-- Navbar -->
 
           <nav
-            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
-            id="layout-navbar"
-          >
-            <div
-              class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none"
-            >
-              <a
-                class="nav-item nav-link px-0 me-xl-4"
-                href="javascript:void(0)"
-              >
-                <i class="bx bx-menu bx-sm"></i>
-              </a>
-            </div>
+  class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+  id="layout-navbar"
+>
+  <div
+    class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none"
+  >
+    <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+      <i class="bx bx-menu bx-sm"></i>
+    </a>
+  </div>
 
-            <div
-              class="navbar-nav-right d-flex align-items-center"
-              id="navbar-collapse"
-            >
-              <!-- Search -->
-              {% if '/thesis_upload/' not in request.path and '/profile/' not in request.path and '/password_change/' not in request.path and '/title-generator/' not in request.path %}
-              <form action="" method="POST">
-              <div class="navbar-nav align-items-center">
-                <div class="nav-item d-flex align-items-center">
-                  <i class="bx bx-search fs-4 lh-0"></i>
-                    {% csrf_token %}
-                    <input
-                      type="text"
-                      class="form-control border-0 shadow-none"
-                      placeholder="Search..."
-                      aria-label="Search..."
-                      name="search"
-                    />
-                    <select class="form-select" id="exampleFormControlSelect1" aria-label="" name="category" style="margin-right: 1rem;">
-                      <option selected value="">Select Category</option>
-                      {% for i in category %}
-                      <option value="{{i.category}}">{{i.category|title}}</option>
-                      {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-primary">Search</button>
-                  </div>
-                </div>
-              </form>
-              {% endif %}
-                <!-- /Search -->
-              <ul class="navbar-nav flex-row align-items-center ms-auto">
-                <!-- Place this tag where you want the button to render. -->
-  
-                <!-- User -->
-                <li class="nav-item navbar-dropdown dropdown-user dropdown">
-                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
-                    <div class="avatar avatar-online">
-                      {% if  request.user.profile.image %}
-                        <img
-                          src="{{ request.user.profile.image.url }}"
-                          alt class="w-px-40 h-auto rounded-circle"
-                        />
-                      {% else %}
-                        <img
-                        src="https://api.dicebear.com/7.x/pixel-art/svg?seed={{request.user}}&hair=short01,short02,short03,short04,short05"
-                        alt class="w-px-40 h-auto rounded-circle"
-                        />
-                      {% endif %}
-                      <!-- <img src="../assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" /> -->
-                    </div>
-                  </a>
-                  <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                      <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                      <a class="dropdown-item" href="{%  url 'logout' %}">
-                        <i class="bx bx-power-off me-2"></i>
-                        <span class="align-middle">Log Out</span>
-                      </a>
-                    </li>
-                  </ul>
-                </li>
-                <!--/ User -->
-              </ul>
-            </div>
-          </nav>
+  <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+    <!-- Search -->
+    {% if '/thesis_upload/' not in request.path and '/profile/' not in request.path and '/password_change/' not in request.path and '/backup-list/' not in request.path and '/title-generator/' not in request.path %}
+    <form action="" method="POST">
+      <div class="navbar-nav align-items-center">
+        <div class="nav-item d-flex align-items-center">
+          <i class="bx bx-search fs-4 lh-0"></i>
+          {% csrf_token %}
+          <input
+            type="text"
+            class="form-control border-0 shadow-none"
+            placeholder="Search..."
+            aria-label="Search..."
+            name="search"
+          />
+          <select
+            class="form-select"
+            id="exampleFormControlSelect1"
+            aria-label=""
+            name="category"
+            style="margin-right: 1rem;"
+          >
+            <option selected value="">Select Category</option>
+            {% for i in category %}
+            <option value="{{i.category}}">{{i.category|title}}</option>
+            {% endfor %}
+          </select>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </div>
+    </form>
+    {% endif %}
+    <!-- /Search -->
+    {% if '/admin_page/' in request.path or '/backup-list/' in request.path %}
+    <div class="navbar-nav align-items-center ms-3">
+      <a href="{% url 'backup_database' %}" class="btn btn-warning me-2">
+        <i class="bx bx-download"></i> Backup
+      </a>
+      <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#restoreModal">
+        <i class="bx bx-upload"></i> Restore
+      </button>
+    </div>
+    {% endif %}
+    <ul class="navbar-nav flex-row align-items-center ms-auto">
+      <!-- User -->
+      <li class="nav-item navbar-dropdown dropdown-user dropdown">
+        <a
+          class="nav-link dropdown-toggle hide-arrow"
+          href="javascript:void(0);"
+          data-bs-toggle="dropdown"
+        >
+          <div class="avatar avatar-online">
+            {% if request.user.profile.image %}
+            <img
+              src="{{ request.user.profile.image.url }}"
+              alt class="w-px-40 h-auto rounded-circle"
+            />
+            {% else %}
+            <img
+              src="https://api.dicebear.com/7.x/pixel-art/svg?seed={{request.user}}&hair=short01,short02,short03,short04,short05"
+              alt class="w-px-40 h-auto rounded-circle"
+            />
+            {% endif %}
+          </div>
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li>
+            <div class="dropdown-divider"></div>
+          </li>
+          <li>
+            <a class="dropdown-item" href="{% url 'logout' %}">
+              <i class="bx bx-power-off me-2"></i>
+              <span class="align-middle">Log Out</span>
+            </a>
+          </li>
+        </ul>
+      </li>
+      <!--/ User -->
+    </ul>
+  </div>
+</nav>
+
+<div class="modal fade" id="restoreModal" tabindex="-1" aria-labelledby="restoreModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="restoreModalLabel">Restore Database</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="POST" action="{% url 'restore_database' %}">
+        {% csrf_token %}
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="backup_file">Select Backup File</label>
+            <select name="backup_file" id="backup_file" class="form-control" required>
+              {% for file, timestamp in backup_files %}
+                <!-- Remove the '.json' extension from the file name -->
+                <option value="{{ file }}">
+                  {{ file|slice:":-5" }}{% if timestamp %} ({{ timestamp|date:"Y-m-d H:i:s" }}){% endif %}
+                </option>
+              {% empty %}
+                <option>No backups available</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Restore</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
           <!-- / Navbar -->
 

@@ -8,6 +8,7 @@ import tempfile
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils.datastructures import MultiValueDictKeyError
 from django.http import HttpResponse
+from django.core.management import call_command
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
@@ -39,7 +40,7 @@ from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
 
 from dotenv import load_dotenv
-from datetime import datetime, timedelta
+from datetime import timedelta
 from django.utils.timezone import now
 from django.db.models.functions import ExtractYear
 from django.db.models.functions import Substr
@@ -55,36 +56,65 @@ client = OpenAI(
 
 @login_required(login_url='login')
 def Home(request):
-    if request.user.is_superuser:
-        return redirect('admin_page')
-    years = (
+    current_year = datetime.now().year
+
+    categories = ThesisUpload.objects.values("category").distinct()
+    all_years = (
         ThesisUpload.objects.filter(status="Approved")
         .exclude(date_finished=None)
         .annotate(year=Substr('date_finished', 1, 4))
         .values_list("year", flat=True)
         .distinct()
-        .order_by("-year")
     )
 
-    return render(request, "archive/home.html", {"years": years})
+    old_years = []
+    recent_years = []
+
+    for y in all_years:
+        if y.isdigit() and int(y) <= current_year - 6:
+            old_years.append(y)
+        else:
+            recent_years.append(y)
+
+    recent_years.sort(reverse=True)
+    old_years.sort(reverse=True)
+
+    return render(request, "archive/home.html", {'recent_years': recent_years, 'old_years': old_years})
 
 @login_required(login_url='login')
 def approved_thesis_list(request, year=None):
-    thesis = ThesisUpload.objects.filter(status='Approved')
+    current_year = datetime.now().year
 
-    # Get distinct categories and years for filtering
+    thesis = ThesisUpload.objects.annotate(
+        year=Substr('date_finished', 1, 4)
+    ).filter(
+        status='Approved'
+    )
+
+    if year:
+        thesis = thesis.filter(year=year)
+
     categories = ThesisUpload.objects.values("category").distinct()
-    years = (
+
+    all_years = (
         ThesisUpload.objects.filter(status="Approved")
         .exclude(date_finished=None)
         .annotate(year=Substr('date_finished', 1, 4))
         .values_list("year", flat=True)
         .distinct()
-        .order_by("-year")
     )
 
-    if year:
-        thesis = thesis.filter(date__year=year)
+    old_years = []
+    recent_years = []
+
+    for y in all_years:
+        if y.isdigit() and int(y) <= current_year - 6:
+            old_years.append(y)
+        else:
+            recent_years.append(y)
+
+    recent_years.sort(reverse=True)
+    old_years.sort(reverse=True)
 
     if request.method == 'POST':
         search = request.POST.get('search', '').strip()
@@ -99,12 +129,76 @@ def approved_thesis_list(request, year=None):
         if category:
             thesis = thesis.filter(category=category)
 
-    context = {'thesis': thesis, 'category': categories, 'years': years}
+    context = {
+        'thesis': thesis,
+        'category': categories,
+        'recent_years': recent_years,
+        'old_years': old_years
+    }
+
     return render(request, 'archive/thesis_archive.html', context)
+
+@login_required(login_url='login')
+def approved_thesis_list_by_old_year(request):
+    current_year = datetime.now().year
+    cutoff_year = current_year - 6
+
+    thesis = ThesisUpload.objects.annotate(
+        year=Substr('date_finished', 1, 4)
+    ).filter(
+        status='Approved',
+        year__lte=str(cutoff_year)
+    )
+
+    categories = ThesisUpload.objects.values("category").distinct()
+
+    all_years = (
+        ThesisUpload.objects.filter(status="Approved")
+        .exclude(date_finished=None)
+        .annotate(year=Substr('date_finished', 1, 4))
+        .values_list("year", flat=True)
+        .distinct()
+    )
+
+    old_years = []
+    recent_years = []
+
+    for y in all_years:
+        if y.isdigit() and int(y) <= cutoff_year:
+            old_years.append(y)
+        else:
+            recent_years.append(y)
+
+    recent_years.sort(reverse=True)
+    old_years.sort(reverse=True)
+
+    if request.method == 'POST':
+        search = request.POST.get('search', '').strip()
+        category = request.POST.get('category', '').strip()
+
+        if search:
+            thesis = thesis.filter(
+                Q(title__icontains=search) |
+                Q(abstract__icontains=search) |
+                Q(date_finished__icontains=search)
+            )
+        if category:
+            thesis = thesis.filter(category=category)
+
+    context = {
+        'thesis': thesis,
+        'category': categories,
+        'recent_years': recent_years,
+        'old_years': old_years
+    }
+
+    return render(request, 'archive/thesis_archive.html', context)
+
     
 @login_required(login_url='login')
 def approved_thesis_list_by_year(request, year):
-    
+    current_year = datetime.now().year
+
     thesis = ThesisUpload.objects.annotate(
         year=Substr('date_finished', 1, 4)
     ).filter(
@@ -113,14 +207,25 @@ def approved_thesis_list_by_year(request, year):
     )
 
     categories = ThesisUpload.objects.values("category").distinct()
-    years = (
+    all_years = (
         ThesisUpload.objects.filter(status="Approved")
         .exclude(date_finished=None)
         .annotate(year=Substr('date_finished', 1, 4))
         .values_list("year", flat=True)
         .distinct()
-        .order_by("-year")
     )
+
+    old_years = []
+    recent_years = []
+
+    for y in all_years:
+        if y.isdigit() and int(y) <= current_year - 6:
+            old_years.append(y)
+        else:
+            recent_years.append(y)
+
+    recent_years.sort(reverse=True)
+    old_years.sort(reverse=True)
 
     if request.method == 'POST':
         search = request.POST.get('search', '').strip()
@@ -135,7 +240,13 @@ def approved_thesis_list_by_year(request, year):
         if category:
             thesis = thesis.filter(category=category)
 
-    context = {'thesis': thesis, 'category': categories, 'years': years, 'selected_year': year}
+    context = {
+        'thesis': thesis,
+        'category': categories,
+        'recent_years': recent_years,
+        'old_years': old_years,
+        'selected_year': year,
+    }
     return render(request, 'archive/thesis_archive.html', context)
 
 
@@ -371,33 +482,50 @@ def TitleGenerator(request):
 def AdminPage(request):
     if not request.user.is_superuser:
         return redirect('home')
-    thesis = ThesisUpload.objects.all()
-    thesis = thesis.filter(status='Approved')
+
+    thesis = ThesisUpload.objects.filter(status='Approved')
     categories = ThesisUpload.objects.values("category").distinct()
-    print(categories)
+
+    backup_dir = "backups"
+    backup_files = []
+    if os.path.exists(backup_dir):
+        for file in os.listdir(backup_dir):
+            if file.endswith(".json"):
+                try:
+                    timestamp = datetime.strptime(file, "backup_%Y-%m-%d_%H-%M-%S.json")
+                    backup_files.append((file, timestamp))
+                except ValueError:
+                    backup_files.append((file, None))
+
+        backup_files.sort(key=lambda x: (x[1] is not None, x[1]), reverse=True)
+
     if request.method == 'POST':
-        search = request.POST.get('search')
-        category = request.POST.get('category')
-        print(search, category)
+        if 'delete' in request.POST:
+            thesis_id = request.POST.get('delete')
+            thesis_to_delete = get_object_or_404(ThesisUpload, id=thesis_id)
+            thesis_to_delete.delete()
+            messages.success(request, "Thesis successfully deleted.")
+            return redirect('admin_page')
+
+        search = request.POST.get('search', '').strip()
+        category = request.POST.get('category', '').strip()
+
         if search and category:
-            thesis = ThesisUpload.objects.filter(Q(title__icontains=search) |
-            Q(abstract__icontains=search) | 
-            Q(date_finished__icontains=search))
-            print(thesis)
-            thesis = thesis.filter(category=category)
-            thesis = thesis.filter(status='Approved')
+            thesis = ThesisUpload.objects.filter(
+                Q(title__icontains=search) |
+                Q(abstract__icontains=search) | 
+                Q(date_finished__icontains=search)
+            ).filter(category=category, status='Approved')
         elif search:
-            thesis = ThesisUpload.objects.filter(Q(title__icontains=search) |
-            Q(abstract__icontains=search) | 
-            Q(date_finished__icontains=search))
-            thesis = thesis.filter(status='Approved')
+            thesis = ThesisUpload.objects.filter(
+                Q(title__icontains=search) |
+                Q(abstract__icontains=search) | 
+                Q(date_finished__icontains=search)
+            ).filter(status='Approved')
         elif category:
-            thesis = ThesisUpload.objects.filter(category=category)
-            thesis = thesis.filter(status='Approved')
-        else:
-            thesis = ThesisUpload.objects.all()
-            thesis = thesis.filter(status='Approved')
-    context = {'thesis': thesis, 'category': categories}
+            thesis = ThesisUpload.objects.filter(category=category, status='Approved')
+
+    context = {'thesis': thesis, 'category': categories, 'backup_files': backup_files}
     return render(request, 'archive/admin_archive/approve_archive.html', context)
 
 @login_required(login_url='login')
@@ -522,3 +650,129 @@ def Verify(request, token):
     else:
         messages.error(request, 'Email not verified')
         return redirect('login')
+
+@login_required(login_url='login')
+def backup_database(request):
+    if not request.user.is_superuser:
+        return redirect('home')
+
+    backup_dir = "backups"
+    if not os.path.exists(backup_dir):
+        os.makedirs(backup_dir)
+
+    filename = f"backup_{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}.json"
+    filepath = os.path.join(backup_dir, filename)
+
+    with open(filepath, "w") as backup_file:
+        call_command("dumpdata", stdout=backup_file)
+
+    messages.success(request, "Database backup created successfully.")
+    return redirect('backup_page')
+
+@login_required(login_url='login')
+def restore_database(request):
+    if not request.user.is_superuser:
+        return redirect('home')
+
+    backup_dir = os.path.join(settings.BASE_DIR, 'backups')
+    backup_files = []
+    
+    if os.path.exists(backup_dir):
+        for file in os.listdir(backup_dir):
+            if file.endswith(".json"):
+                try:
+                    timestamp = datetime.strptime(file, "backup_%Y-%m-%d_%H-%M-%S.json")
+                    backup_files.append((file, timestamp))
+                except ValueError:
+                    backup_files.append((file, None))
+
+        backup_files.sort(key=lambda x: (x[1] is not None, x[1]), reverse=True)
+
+    if request.method == "POST":
+        backup_file = request.POST.get("backup_file")
+        
+        if backup_file:
+            file_path = os.path.join(backup_dir, backup_file)
+            try:
+                call_command("loaddata", file_path)
+            except Exception as e:
+                messages.error(request, f"Restore failed: {e}")
+            return redirect("admin_page")
+    
+    return render(request, "archive/admin_archive/approve_archive.html", {"backup_files": [file[0] for file in backup_files]})
+
+
+@login_required(login_url='login')
+def list_backups(request):
+    if not request.user.is_superuser:
+        return redirect('home')
+
+
+    backup_dir = "backups"
+    backup_files = []
+    if os.path.exists(backup_dir):
+        for file in os.listdir(backup_dir):
+            if file.endswith(".json"):
+                try:
+                    timestamp = datetime.strptime(file, "backup_%Y-%m-%d_%H-%M-%S.json")
+                    backup_files.append((file, timestamp))
+                except ValueError:
+                    backup_files.append((file, None))
+
+        backup_files.sort(key=lambda x: (x[1] is not None, x[1]), reverse=True)
+
+    backups = []
+    BACKUP_DIR = os.path.join(settings.BASE_DIR, 'backups')
+
+    try:
+        if os.path.exists(BACKUP_DIR):
+            for filename in os.listdir(BACKUP_DIR):
+                if filename.endswith(".json"):
+                    timestamp = os.path.getmtime(os.path.join(BACKUP_DIR, filename))
+                    backups.append((filename, timestamp))
+        else:
+            backups = []
+
+    except FileNotFoundError:
+        backups = []
+
+    return render(request, 'archive/admin_archive/backup_management.html', {'backups': backups, 'backup_files': backup_files})
+
+
+@login_required(login_url='login')
+def delete_backup(request, filename):
+    BACKUP_DIR = os.path.join(settings.BASE_DIR, 'backups')
+    try:
+        file_path = os.path.join(BACKUP_DIR, filename)
+        if os.path.exists(file_path):
+            os.remove(file_path)
+        else:
+            messages.error(request, f'Backup {filename} not found.')
+    except Exception as e:
+        messages.error(request, f'Error deleting backup: {e}')
+    return redirect('backup_page')
+
+
+@login_required(login_url='login')
+def rename_backup(request, filename):
+    BACKUP_DIR = os.path.join(settings.BASE_DIR, 'backups')
+    
+    if request.method == 'POST':
+        new_name = request.POST.get('new_name', '').strip()
+        
+        if new_name:
+            new_name_with_ext = f"{new_name}.json" if not new_name.endswith('.json') else new_name
+            old_file_path = os.path.join(BACKUP_DIR, filename)
+            new_file_path = os.path.join(BACKUP_DIR, new_name_with_ext)
+
+            if os.path.exists(old_file_path):
+                try:
+                    os.rename(old_file_path, new_file_path)
+                except Exception as e:
+                    messages.error(request, f'Error renaming backup: {e}')
+            else:
+                messages.error(request, f'Backup {filename} not found.')
+        else:
+            messages.error(request, 'Invalid new name.')
+
+    return redirect('backup_page')

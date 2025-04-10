@@ -12,11 +12,17 @@ urlpatterns = [
     path("title-generator/", views.TitleGenerator, name="title-generator"),
     path('approved-thesis/', views.approved_thesis_list, name='approved_thesis_list'),
     path('approved-thesis/<int:year>/', views.approved_thesis_list_by_year, name='approved_thesis_list_by_year'),
+    path('approved-thesis/old/', views.approved_thesis_list_by_old_year, name='approved_thesis_list_by_old_year'),
     
     # Admin
     path("admin_page/", views.AdminPage, name="admin_page"),
     path("pending_uploads/", views.PendingUploads, name="pending_uploads"),
     path("approved_uploads/<str:pk>", views.ApprovedUploads, name="approved_uploads"),
+    path("backup/", views.backup_database, name="backup_database"),
+    path("restore/", views.restore_database, name="restore_database"),
+    path('backup-list/', views.list_backups, name='backup_page'),
+    path('backup/delete/<str:filename>/', views.delete_backup, name='delete_backup'),
+    path('backup/rename/<str:filename>/', views.rename_backup, name='rename_backup'),
 
     # Email Verification
     path("verify/<str:token>/", views.Verify, name="verify"),

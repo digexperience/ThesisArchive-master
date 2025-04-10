@@ -167,7 +167,7 @@
               </a>
             </li>
             <li class="menu-item {% if '/approved-thesis/' in request.path %}active{% endif %}" id="capstone-menu">
-              {% if years|length > 0 %}
+              {% if recent_years|length > 0 or old_years|length > 0 %}
                   <a href="#" class="menu-link">
                       <i class="menu-icon tf-icons bx bx-folder"></i>
                       <div data-i18n="Analytics">Capstone Documents</div>
@@ -176,13 +176,19 @@
                       <li class="menu-item {% if request.path == '/approved-thesis/' %}active{% endif %}">
                           <a href="{% url 'approved_thesis_list' %}" class="menu-link">All Documents</a>
                       </li>
-                      {% for year in years %}
+                      {% for year in recent_years %}
                           {% if year and year != 0 %}
                               <li class="menu-item {% if '/approved-thesis/' in request.path and request.path|slice:"-5:-1" == year|stringformat:"s" %}active{% endif %}">
                                   <a href="{% url 'approved_thesis_list_by_year' year %}" class="menu-link">{{ year }}</a>
                               </li>
                           {% endif %}
                       {% endfor %}
+
+                      {% if old_years %}
+                          <li class="menu-item has-submenu">
+                              <a href="{% url 'approved_thesis_list_by_old_year' %}" class="menu-link">Old Documents</a>
+                          </li>
+                      {% endif %}
                   </ul>
               {% else %}
                   <a href="{% url 'approved_thesis_list' %}" class="menu-link">
